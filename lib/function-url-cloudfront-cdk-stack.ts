@@ -16,7 +16,6 @@ export class FunctionUrlCloudfrontCdkStack extends cdk.Stack {
       entry: path.join(__dirname, '../src/lambda/index.ts'),
     });
 
-    // Lambda Function URLの設定
     const functionUrl = lambdaFunction.addFunctionUrl({
       authType: lambda.FunctionUrlAuthType.AWS_IAM,
     });
@@ -27,7 +26,6 @@ export class FunctionUrlCloudfrontCdkStack extends cdk.Stack {
       description: 'URL for the Lambda function',
     });
 
-    // Origin Access Controlの作成
     const oac = new cloudfront.CfnOriginAccessControl(this, 'MyOAC', {
       originAccessControlConfig: {
         name: 'MyOAC',
@@ -37,7 +35,6 @@ export class FunctionUrlCloudfrontCdkStack extends cdk.Stack {
       },
     });
 
-    // カスタムOrigin Request Policyの作成
     const customOriginRequestPolicy = new cloudfront.OriginRequestPolicy(this, 'CustomOriginRequestPolicy', {
       originRequestPolicyName: 'LambdaFunctionUrlPolicy',
       headerBehavior: cloudfront.OriginRequestHeaderBehavior.allowList('User-Agent', 'Referer'),
@@ -45,7 +42,6 @@ export class FunctionUrlCloudfrontCdkStack extends cdk.Stack {
       cookieBehavior: cloudfront.OriginRequestCookieBehavior.none(),
     });
 
-    // CloudFrontディストリビューションの作成
     const distribution = new cloudfront.Distribution(this, 'MyDistribution', {
       defaultBehavior: {
         origin: new origins.HttpOrigin(cdk.Fn.select(2, cdk.Fn.split('/', functionUrl.url))),
@@ -62,11 +58,9 @@ export class FunctionUrlCloudfrontCdkStack extends cdk.Stack {
       sourceArn: `arn:aws:cloudfront::${this.account}:distribution/${distribution.distributionId}`,
     });
 
-    // OACをCloudFrontディストリビューションに関連付け
     const cfnDistribution = distribution.node.defaultChild as cloudfront.CfnDistribution;
     cfnDistribution.addPropertyOverride('DistributionConfig.Origins.0.OriginAccessControlId', oac.ref);
 
-    // CloudFront URLの出力
     new cdk.CfnOutput(this, 'DistributionDomainName', {
       value: distribution.distributionDomainName,
       description: 'CloudFront Distribution Domain Name',
