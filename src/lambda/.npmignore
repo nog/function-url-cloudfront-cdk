@@ -1,0 +1,4 @@
+*.ts
+!index.ts
+tsconfig.json
+package-lock.json
