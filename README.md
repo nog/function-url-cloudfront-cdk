@@ -57,7 +57,6 @@ cdk deploy
 
 - `lib/function-url-cloudfront-cdk-stack.ts`: Main CDK stack definition
 - `src/lambda/index.ts`: Lambda function code
-- `bin/function-url-cloudfront-cdk.ts`: CDK app entry point
 
 ## Customization
 
