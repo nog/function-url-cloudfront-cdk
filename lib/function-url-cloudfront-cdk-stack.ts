@@ -48,7 +48,7 @@ export class FunctionUrlCloudfrontCdkStack extends cdk.Stack {
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.HTTPS_ONLY,
         allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
         originRequestPolicy: customOriginRequestPolicy,
-        cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED, // キャッシュを無効化
+        cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
       },
     });
 
